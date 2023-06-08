@@ -1,0 +1,44 @@
+//Step Definition Changes
+// First Change
+@When("user clicks on products suboption")
+	public void user_clicks_on_products_suboption() {
+		
+		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(30));
+		WebElement  products= 
+				wait.until(ExpectedConditions.elementToBeClickable
+						(By.xpath("/html/body/div/nav/ul/li[3]/ul/li[3]/a")));
+		
+		products.click();
+			
+		System.out.println("user clicks on products suboption");
+	}
+  
+  //Second Change
+  @When("user enters Regural price")
+	public void user_enters_regural_price() {
+		driver.findElement(By.name("regular_price")).sendKeys("15000");
+		System.out.println("User entered regural price");
+	}
+  
+  
+  //Third Change- Use your own image path
+  @When("user upload image of product")
+	public void user_upload_image_of_product() {
+		WebElement upload_file = driver.findElement(By.id("images[]"));
+		
+			upload_file.sendKeys("C:/Users/Win-10/Pictures/Saved Pictures/Bundles.jpg");
+	}
+  
+  //Fourth Chnage - At last new feature added to confirm
+  @Then("product saved successfully")
+	public void product_saved_successfully() {
+		
+		String expectedText="Product Saved Successfully";
+		String actualText= driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div[1]/ul/p")).getText(); 
+		assertEquals("Saved Successfully",expectedText,actualText);
+  
+  //Feature File Changes
+21 When user upload image of product
+22 When user clicks on Submit buttons
+23 Then product saved successfully
+  
