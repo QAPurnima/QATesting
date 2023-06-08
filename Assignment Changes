@@ -29,7 +29,7 @@
 			upload_file.sendKeys("C:/Users/Win-10/Pictures/Saved Pictures/Bundles.jpg");
 	}
   
-  //Fourth Chnage - At last new feature added to confirm
+  //Fourth Change - At last new feature added to confirm
   @Then("product saved successfully")
 	public void product_saved_successfully() {
 		
