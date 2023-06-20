@@ -1,0 +1,150 @@
+Feature: feature to test login functionality
+  Scenario Outline: Check login is sucessfull with valid credentials
+    Given user is on login page
+    When User enters "enter emailID here" and "enter password here"
+    And clicks on login button
+    Then user is navigated to home page
+    When user clicks on products dropdown
+    When user clicks on products suboption
+    When user clicks on Add Product
+    When user enters product details
+      | ProductName | RegularPrice | SalePrice | SKU    |  Weight | Description    | Sdescription | Images                                                    |
+      | Comb    |          300 |       250 | comb1    |       0.1 | wide comb     | wide comb   | C:\\Users\\Win-10\\Pictures\\Saved Pictures\\comb.jpg |
+      | Serum   |          400 |        310 | serum1 |   0.5 | hair serum | hair serum        | C:\\Users\\Win-10\\Pictures\\Saved Pictures\\serum.jpg |
+    Then product saved successfully
+
+
+STEP DEFINITION FILE
+
+
+package stepDefinition;
+
+import static org.junit.Assert.assertEquals;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+public class AddProducts {
+
+	WebDriver driver = null;
+
+	@Given("user is on login page")
+	public void user_is_on_login_page() {
+		System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver.exe");
+		driver = new ChromeDriver();
+		driver.get("enter URL here");
+		System.out.println("Login page opened");
+	}
+
+	@When("User enters {string} and {string}")
+	public void user_enters_and(String username, String password) {
+		driver.findElement(By.id("email")).sendKeys(username);
+		driver.findElement(By.id("password")).sendKeys(password);
+		System.out.println("User entered username and password");
+	}
+
+	@When("clicks on login button")
+	public void clicks_on_login_button() {
+		driver.findElement(By.xpath("/html/body/div/div/div/div[1]/div/div/div[2]/form/input[2]")).click();
+		System.out.println("User Clicks login button");
+	}
+
+	@Then("user is navigated to home page")
+	public void user_is_navigated_to_home_page() {
+		String expectedText = "Categories";
+		String actualText = driver
+				.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div[1]/div/div[1]/div/div[1]/h2"))
+				.getText();
+		assertEquals("Login Successful", expectedText, actualText);
+		System.out.println("Home Page Opened");
+	}
+
+	@When("user clicks on products dropdown")
+	public void user_clicks_on_products_dropdown() {
+		driver.findElement(By.xpath("/html/body/div/nav/ul/li[3]/a")).click();
+		System.out.println("user clicks on products dropdown");
+	}
+
+	@When("user clicks on products suboption")
+	public void user_clicks_on_products_suboption() {
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+		WebElement products = wait
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div/nav/ul/li[3]/ul/li[3]/a")));
+
+		products.click();
+
+	}
+
+	@When("user clicks on Add Product")
+	public void user_clicks_on_add_product() {
+
+		driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div[1]/div[1]/div/button")).click();
+
+		System.out.println("user clicks on Add product");
+	}
+
+	@When("^user enters product details$")
+	public void user_enters_following_details(DataTable dataTable) {
+
+		List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+		for (Map<String, String> row : data) {
+
+			Select selectvariationtype = new Select(driver.findElement(By.id("variationType")));
+			selectvariationtype.selectByVisibleText("No");
+			Select Selectecommerceplatform = new Select(driver.findElement(By.id("ecommerce_platform")));
+			Selectecommerceplatform.selectByVisibleText("Woocommerce");
+			Select Selectcategory = new Select(driver.findElement(By.name("category_id")));
+			Selectcategory.selectByVisibleText("foundation");
+
+			driver.findElement(By.name("name")).sendKeys(row.get("ProductName"));
+			driver.findElement(By.name("regular_price")).sendKeys(row.get("RegularPrice"));
+			driver.findElement(By.name("sale_price")).sendKeys(row.get("SalePrice"));
+			driver.findElement(By.name("sku")).sendKeys(row.get("SKU"));
+
+			Select Selectproductstockstatus = new Select(driver.findElement(By.name("stock_status")));
+			Selectproductstockstatus.selectByVisibleText("In Stock");
+
+			driver.findElement(By.name("weight")).sendKeys(row.get("Weight"));
+
+			driver.findElement(By.name("description")).sendKeys(row.get("Description"));
+
+			driver.findElement(By.name("short_description")).sendKeys(row.get("Sdescription"));
+			driver.findElement(By.id("images[]")).sendKeys(row.get("Images"));
+
+			driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div[2]/div/div/form/input[3]")).click();
+
+			driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div[2]/div[1]/div/button")).click();
+
+		}
+
+	}
+
+	@Then("product saved successfully")
+	public void product_saved_successfully() {
+
+		System.out.println("Product Saved Successfully");
+	}
+
+}
+
+
+
+
+
+
+
